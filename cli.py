@@ -26,7 +26,7 @@ if __name__ == '__main__':
     suite = TestSuite()
     loader = unittest.TestLoader()
     
-    suite.addTests(loader.loadTestsFromName("test3.Fio"))
+    suite.addTests(loader.loadTestsFromName("test.Fio"))
 
     runner = unittest.TextTestRunner()
     runner.run(suite)
