@@ -19,18 +19,30 @@ class Fio(unittest.TestCase):
         for i in cli.d:
             self.assertRegex(execute("sudo pvdisplay").stdout, i)
 
-    def test_vgcreate(self):
         execute("sudo vgcreate {} {}".format(cli.vgname,cli.disk_name))
         self.assertRegex(execute("sudo vgdisplay").stdout, cli.vgname)
 
-    def test_lvcreate(self):
+    
+        execute("sudo lvcreate -n {} --size {}G {}".format(cli.lvname,cli.lvsize,cli.vgname))
+        self.assertRegex(execute("sudo lvdisplay").stdout, cli.lvname)
+
+        print("\n PV  LV  VG has been created")
+
+
+    def test_fscreate(self):
+        execute("sudo pvcreate {}".format(cli.disk_name))
+        for i in cli.d:
+            self.assertRegex(execute("sudo pvdisplay").stdout, i)
+            
+        execute("sudo vgcreate {} {}".format(cli.vgname,cli.disk_name))
+        self.assertRegex(execute("sudo vgdisplay").stdout, cli.vgname)
+        
         execute("sudo lvcreate -n {} --size {}G {}".format(cli.lvname,cli.lvsize,cli.vgname))
         self.assertRegex(execute("sudo lvdisplay").stdout, cli.lvname)
 
         print("\n PV  LV  VG has been created, \n Creating file system")
-
-
-    def test_fscreate(self):
+        
+        
         self.file_dest = "/"
         self.lvpath = ("/dev/{}/{}".format(cli.vgname,cli.lvname))
         execute("sudo mkfs.{} {}".format(cli.fs,self.lvpath))
@@ -39,7 +51,7 @@ class Fio(unittest.TestCase):
         self.assertRegex(execute("df -h").stdout, self.file_dest)
         print("\n File has been created & mounted")
 
-    def test_checkio(self):
+        #def test_checkio(self):
         a = execute("sudo fio --filename={} --size=500GB --direct=1 --rw=randrw --bs=4k --ioengine=libaio --iodepth=256 --runtime=120 --numjobs=4 --time_based --group_reporting --name=iops-test-job --eta-newline=1".format(self.lvpath))
         self.assertRegex(a.stdout, "Run status")
         print("IO has been verified")
