@@ -14,19 +14,19 @@ class Fio(unittest.TestCase):
         print("Done")
 
         
-    def test_pvcreate(self):
-        execute("sudo pvcreate {}".format(cli.disk_name))
-        for i in cli.d:
-            self.assertRegex(execute("sudo pvdisplay").stdout, i)
+#     def test_pvcreate(self):
+#         execute("sudo pvcreate {}".format(cli.disk_name))
+#         for i in cli.d:
+#             self.assertRegex(execute("sudo pvdisplay").stdout, i)
 
-        execute("sudo vgcreate {} {}".format(cli.vgname,cli.disk_name))
-        self.assertRegex(execute("sudo vgdisplay").stdout, cli.vgname)
+#         execute("sudo vgcreate {} {}".format(cli.vgname,cli.disk_name))
+#         self.assertRegex(execute("sudo vgdisplay").stdout, cli.vgname)
 
     
-        execute("sudo lvcreate -n {} --size {}G {}".format(cli.lvname,cli.lvsize,cli.vgname))
-        self.assertRegex(execute("sudo lvdisplay").stdout, cli.lvname)
+#         execute("sudo lvcreate -n {} --size {}G {}".format(cli.lvname,cli.lvsize,cli.vgname))
+#         self.assertRegex(execute("sudo lvdisplay").stdout, cli.lvname)
 
-        print("\n PV  LV  VG has been created")
+#         print("\n PV  LV  VG has been created")
 
 
     def test_fscreate(self):
